@@ -89,10 +89,13 @@ def color_map(in_tif, carpeta_coloreada):
 
                     band = src.read(1, window=window)
                     band[band == nodata] = meta["nodata"]
+                    band[band == np.nan] = meta["nodata"]
                     band *= 1000
 
                     dst.write(band, 1, window = window)
                     dst.write_colormap(1, color_dict)
+
+                    print("¡TIFF coloreado!")
 
     return out_tif
     
