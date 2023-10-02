@@ -47,7 +47,7 @@ def color_map(in_tif, carpeta_coloreada):
             meta["dtype"] = "uint16"
             meta["nodata"] = 0
 
-            cotas_window = []
+            cotas_window = set()
             
             print(f"Leyendo raster: {in_tif}")
             for _, window in src.block_windows(1):
@@ -61,10 +61,10 @@ def color_map(in_tif, carpeta_coloreada):
 
 
                 # Lista con las cotas ordenadas de menor a mayor
-                cotas_window += list(set(band.ravel()))  # Ravel convierte la matriz a una serie 1D
-                cotas_window = sorted(list(set(cotas_window)))
+                cotas_window.update(band.ravel())  # Ravel convierte la matriz a una serie 1D
+
                 
-            cotas_ordenadas = cotas_window
+            cotas_ordenadas = sorted(list(cotas_window))
             cotas_window = None
             cotas = [int(cota) for cota in cotas_ordenadas]
             cotas_ordenadas = None
