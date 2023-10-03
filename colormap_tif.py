@@ -6,6 +6,7 @@ import numpy as np
 Colorea con tonalidades azul mapas en formato TIFF según la profundidad.
 
 @author diego.garciap
+
 """
 
 
