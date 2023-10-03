@@ -2,6 +2,12 @@ import os
 import rasterio
 import numpy as np
 
+"""
+Colorea con tonalidades azul mapas en formato TIFF según la profundidad.
+
+@author diego.garciap
+"""
+
 
 """
 Genera códigos RGBA-8bits de azul equidistantes según la cantidad que se introduzca
