@@ -2,20 +2,6 @@ import os
 import rasterio
 import numpy as np
 
-"""
-Genera códigos RGBA-16bits de azul equidistantes según la cantidad que se introduzca
-"""
-def generar_tonalidades_de_azul(cantidad):
-    if cantidad <= 0:
-        raise ValueError("La cantidad debe ser un número positivo.")
-
-    # Calcula el espaciado entre las tonalidades de azul
-    espaciado = int(65535 / (cantidad - 1))
-
-    # Genera la lista de tonalidades de azul
-    tonalidades_azul = [(0, 0, i, 65535) for i in range(0, 65536, espaciado)]
-
-    return tonalidades_azul
 
 """
 Genera códigos RGBA-8bits de azul equidistantes según la cantidad que se introduzca
@@ -49,24 +35,23 @@ def color_map(in_tif, carpeta_coloreada):
 
             cotas_window = set()
             
-            print(f"Leyendo raster: {in_tif}")
+            print(f"Leyendo...")
             for _, window in src.block_windows(1):
 
-                print(window)
+                #print(window)
 
                 band = src.read(1, window=window)
                 band[band == nodata] = meta["nodata"]
                 band[band == np.nan] = meta["nodata"]
                 band *= 1000
 
-
-                # Lista con las cotas ordenadas de menor a mayor
                 cotas_window.update(band.ravel())  # Ravel convierte la matriz a una serie 1D
 
-                
+            
+            # Lista con las cotas ordenadas de menor a mayor
             cotas_ordenadas = sorted(list(cotas_window))
             cotas_window = None
-            cotas = [int(cota) for cota in cotas_ordenadas]
+            cotas = [int(cota) for cota in cotas_ordenadas if ~np.isnan(cota)]
             cotas_ordenadas = None
             cotas = cotas[1:] # Suprimimos el nodata value
 
@@ -82,10 +67,10 @@ def color_map(in_tif, carpeta_coloreada):
             # Guarda la banda editada como un nuevo archivo TIFF
             with rasterio.open(out_tif, 'w', **meta) as dst:
 
-                print(f"Escribiendo raster: {in_tif}")
+                print(f"Escribiendo...")
                 for _, window in src.block_windows(1):
 
-                    print(window)
+                    #print(window)
 
                     band = src.read(1, window=window)
                     band[band == nodata] = meta["nodata"]
@@ -95,7 +80,8 @@ def color_map(in_tif, carpeta_coloreada):
                     dst.write(band, 1, window = window)
                     dst.write_colormap(1, color_dict)
 
-                print("¡Mapa coloreado!")
+
+            print("¡Mapa coloreado!")
 
     return out_tif
     
@@ -119,9 +105,9 @@ def colormap_tif(carpeta_inicial, carpeta_coloreada):
 
 if __name__ == '__main__':
 #######################################  MODIFICAR AQUÍ  ##################################################################
-    carpeta_inicial = r"D:\EU_Cases\Rasters_EU"
-    carpeta_coloreada = r"D:\EU_Cases\ColorMap_EU"
+    carpeta_inicial = r"C:\Users\gprietod\Desktop\Rasters_CFCC"
+    carpeta_coloreada = r"C:\Users\gprietod\Desktop\Mapa_Rasters"
 ###########################################################################################################################
     
     colormap_tif(carpeta_inicial, carpeta_coloreada)
-    print("Mapas coloreados")
+    print("Todos los mapas han sido coloreados.")
