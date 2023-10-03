@@ -49,7 +49,7 @@ def color_map(in_tif, carpeta_coloreada):
 
                 band = src.read(1, window=window)
                 band[band == nodata] = meta["nodata"]
-                band[band == np.nan] = meta["nodata"]
+                band = np.nan_to_num(band, nan=meta["nodata"])
                 band *= 1000
 
                 cotas_window.update(band.ravel())  # Ravel convierte la matriz a una serie 1D
@@ -58,7 +58,8 @@ def color_map(in_tif, carpeta_coloreada):
             # Lista con las cotas ordenadas de menor a mayor
             cotas_ordenadas = sorted(list(cotas_window))
             cotas_window = None
-            cotas = [int(cota) for cota in cotas_ordenadas if ~np.isnan(cota)]
+            cotas = [int(cota) for cota in cotas_ordenadas]
+
             cotas_ordenadas = None
             cotas = cotas[1:] # Suprimimos el nodata value
 
@@ -81,8 +82,9 @@ def color_map(in_tif, carpeta_coloreada):
 
                     band = src.read(1, window=window)
                     band[band == nodata] = meta["nodata"]
-                    band[band == np.nan] = meta["nodata"]
+                    band = np.nan_to_num(band, nan=meta["nodata"])
                     band *= 1000
+                    band.astype(np.uint16)
 
                     dst.write(band, 1, window = window)
                     dst.write_colormap(1, color_dict)
