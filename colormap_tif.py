@@ -115,7 +115,7 @@ def colormap_tif(carpeta_inicial, carpeta_coloreada):
 if __name__ == '__main__':
 #######################################  MODIFICAR AQUÍ  ##################################################################
     carpeta_inicial = r"C:\Users\gprietod\Desktop\Rasters_CFCC"
-    carpeta_coloreada = r"C:\Users\gprietod\Desktop\Mapa_Rasters"
+    carpeta_coloreada = r"C:\Users\gprietod\Desktop\ColorMap_CFCC"
 ###########################################################################################################################
     
     colormap_tif(carpeta_inicial, carpeta_coloreada)
